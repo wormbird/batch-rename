@@ -27,11 +27,18 @@ def user_input_params():
         if user_path != '':
             path = user_path
         path = path.replace('\\', '/').rstrip('/')
+        if os.path.exists(path) == False:
+            print("目录地址不存在: %s" % (path,))
+            continue
         print("指定目录: %s" % (path,))
 
         user_name = input("请输入名称: ")
         if user_name != '':
             name_type = os.path.splitext(user_name)[-1]
+            if name_type == '':
+                print("输入类型示例:doc,docx,xls,xlsx,jpg等")
+                name_type = '.' + input("请输入类型: ")
+                user_name += name_type
             if user_name.find('%d') == -1:
                 user_name = user_name.replace(name_type, '-%d' + name_type)
             name = user_name
@@ -47,15 +54,6 @@ def user_input_params():
 def batch_rename(path, name, name_type):
     num = 1
     script = __file__
-
-    # files = os.listdir(path)
-    # for file in files:
-    #     file_new = name % num
-    #     if(path+'/'+file == script):
-    #         continue
-    #     os.rename(path+'/'+file,path+'/'+file_new)
-    #     print("%s改名为%s" % (file,file_new))
-    #     num+=1
 
     print('start----------')
     for root, dirs, files in os.walk(path):
